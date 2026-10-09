@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monster Energy Store</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex items-center justify-center p-2 sm:p-6">
+
+    <!-- Container do Aparelho Mobile -->
+    <div class="w-full max-w-[420px] h-[850px] bg-slate-50 text-slate-800 rounded-[3rem] shadow-2xl overflow-hidden flex flex-col border-[8px] border-slate-800 relative">
+        
+        <!-- Barra de Status simulada -->
+        <div class="bg-slate-50 px-6 pt-3 pb-1 flex justify-between items-center text-xs font-semibold text-slate-800 shrink-0">
+            <span>9:41</span>
+            <div class="flex items-center space-x-1.5 text-slate-900">
+                <i class="fa-solid fa-signal text-[10px]"></i>
+                <i class="fa-solid fa-wifi text-[10px]"></i>
+                <i class="fa-solid fa-battery-full text-xs"></i>
+            </div>
+        </div>
+
+        <!-- HEADER DA TELA ATUAL -->
+        <header class="px-6 py-3 flex items-center justify-between bg-slate-50 shrink-0 border-b border-slate-100">
+            <div id="header-left" class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-sm overflow-hidden border border-slate-300">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/10b981/ffffff?text=ME'">
+                </div>
+                <div>
+                    <h2 class="text-xs text-slate-500 font-medium">Bom dia,</h2>
+                    <h1 class="text-sm font-bold text-slate-900">Ghazaleh ⚡</h1>
+                </div>
+            </div>
+            <button onclick="mudarAba('carrinho')" class="relative w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition text-slate-800 border border-slate-200 shadow-sm">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span id="cart-badge" class="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden shadow">0</span>
+            </button>
+        </header>
+
+        <!-- CONTEÚDO RENDERIZADO DINAMICAMENTE -->
+        <main class="flex-1 overflow-y-auto px-5 py-4 space-y-5 pb-24 bg-slate-50" id="main-container">
+            <!-- Renderizado via JS -->
+        </main>
+
+        <!-- BOTTOM NAVIGATION (ESTILO APP MOBILE) -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 px-6 py-3.5 flex justify-between items-center z-20 shadow-lg">
+            <button onclick="mudarAba('home')" id="nav-home" class="flex flex-col items-center text-emerald-600 transition">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] font-bold mt-0.5">Home</span>
+            </button>
+            <button onclick="mudarAba('catalogo')" id="nav-catalogo" class="flex flex-col items-center text-slate-400 hover:text-slate-600 transition">
+                <i class="fa-solid fa-bolt text-lg"></i>
+                <span class="text-[10px] font-medium mt-0.5">Linhas</span>
+            </button>
+            <button onclick="mudarAba('carrinho')" id="nav-carrinho" class="flex flex-col items-center text-slate-400 hover:text-slate-600 transition">
+                <i class="fa-solid fa-receipt text-lg"></i>
+                <span class="text-[10px] font-medium mt-0.5">Carrinho</span>
+            </button>
+            <button onclick="mudarAba('perfil')" id="nav-perfil" class="flex flex-col items-center text-slate-400 hover:text-slate-600 transition">
+                <i class="fa-solid fa-user text-lg"></i>
+                <span class="text-[10px] font-medium mt-0.5">Perfil</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        const catalogo = [
+            { 
+                id: 1, 
+                nome: "Monster Energy Green", 
+                sabor: "Tradicional - 473ml", 
+                categoria: "Original", 
+                preco: 10.49, 
+                img: "image_b856db.png" 
+            },
+            { 
+                id: 2, 
+                nome: "Monster Ultra Rosa", 
+                sabor: "Floral & Citrus Zero - 473ml", 
+                categoria: "Ultra", 
+                preco: 10.99, 
+                img: "image_b857b1.png" 
+            },
+            { 
+                id: 3, 
+                nome: "Monster Mango Loco", 
+                sabor: "Manga com Suco - 473ml", 
+                categoria: "Juice", 
+                preco: 12.49, 
+                img: "image_b85a7d.png" 
+            },
+            { 
+                id: 4, 
+                nome: "Monster Ultra Sunrise", 
+                sabor: "Laranja & Citrus Zero - 473ml", 
+                categoria: "Ultra", 
+                preco: 10.99, 
+                img: "image_b85ad3.png" 
+            }
+        ];
+
+        let carrinho = {};
+        let abaAtual = 'home';
+        let categoriaAtiva = 'todos';
+        let cupomDesconto = 0;
+
+        function mudarAba(aba) {
+            abaAtual = aba;
+            ['home', 'catalogo', 'carrinho', 'perfil'].forEach(b => {
+                const el = document.getElementById(`nav-${b}`);
+                if (el) {
+                    if (b === aba) {
+                        el.className = "flex flex-col items-center text-emerald-600 transition";
+                    } else {
+                        el.className = "flex flex-col items-center text-slate-400 hover:text-slate-600 transition";
+                    }
+                }
+            });
+            renderizar();
+        }
+
+        function alterarQtd(id, delta) {
+            if (!carrinho[id]) {
+                if (delta > 0) {
+                    const prod = catalogo.find(p => p.id === id);
+                    carrinho[id] = { produto: prod, quantidade: delta };
+                }
+            } else {
+                carrinho[id].quantidade += delta;
+                if (carrinho[id].quantidade <= 0) {
+                    delete carrinho[id];
+                }
+            }
+            atualizarBadge();
+            renderizar();
+        }
+
+        function atualizarBadge() {
+            const totalItens = Object.values(carrinho).reduce((acc, item) => acc + item.quantidade, 0);
+            const badge = document.getElementById('cart-badge');
+            if (totalItens > 0) {
+                badge.innerText = totalItens;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function calcularTotais() {
+            let subtotal = 0;
+            for (let item of Object.values(carrinho)) {
+                subtotal += item.produto.preco * item.quantidade;
+            }
+            const descontoVal = subtotal * cupomDesconto;
+            const frete = subtotal > 0 ? 5.00 : 0;
+            const total = (subtotal - descontoVal) + frete;
+            return { subtotal, descontoVal, frete, total };
+        }
+
+        function aplicarCupom() {
+            const input = document.getElementById('promo-input').value.trim().toUpperCase();
+            const msg = document.getElementById('promo-msg');
+            if (input === 'MONSTER10' || input === 'BEAST10') {
+                cupomDesconto = 0.10;
+                msg.innerText = "✅ Cupom de 10% aplicado com sucesso!";
+                msg.className = "text-[11px] text-emerald-600 mt-1 font-medium";
+            } else {
+                cupomDesconto = 0;
+                msg.innerText = "❌ Cupom inválido (Tente: MONSTER10)";
+                msg.className = "text-[11px] text-rose-500 mt-1 font-medium";
+            }
+            renderizar();
+        }
+
+        function renderizar() {
+            const main = document.getElementById('main-container');
+            main.innerHTML = '';
+
+            if (abaAtual === 'home') {
+                const banner = document.createElement('div');
+                banner.className = "bg-gradient-to-r from-emerald-600 to-emerald-900 rounded-3xl p-5 text-white relative overflow-hidden shadow-lg flex justify-between items-center";
+                banner.innerHTML = `
+                    <div class="z-10 space-y-2 max-w-[60%]">
+                        <span class="bg-black/30 text-emerald-200 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Promoção do Dia</span>
+                        <h2 class="text-lg font-extrabold leading-tight">Leve 3, Ganhe 1 Gelado!</h2>
+                        <p class="text-xs text-emerald-100 opacity-90">Abasteça sua geladeira e garanta energia máxima.</p>
+                        <button onclick="mudarAba('catalogo')" class="mt-2 bg-white text-emerald-900 font-bold px-4 py-2 rounded-xl text-xs hover:bg-emerald-50 transition shadow">Ver Oferta</button>
+                    </div>
+                    <div class="absolute -right-2 -bottom-4 w-28 h-32 flex items-center justify-center opacity-95">
+                        <img src="image_b856db.png" alt="Monster" class="h-28 object-contain drop-shadow-2xl">
+                    </div>
+                `;
+                main.appendChild(banner);
+
+                const catSec = document.createElement('div');
+                catSec.innerHTML = `
+                    <h3 class="text-sm font-bold text-slate-900 mb-3">Categorias</h3>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="filtrarCategoria('todos')" class="flex flex-col items-center p-3 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-emerald-500 transition">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-bolt"></i></div>
+                            <span class="text-[11px] font-semibold text-slate-700">Todos</span>
+                        </button>
+                        <button onclick="filtrarCategoria('Original')" class="flex flex-col items-center p-3 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-emerald-500 transition">
+                            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-fire"></i></div>
+                            <span class="text-[11px] font-semibold text-slate-700">Original</span>
+                        </button>
+                        <button onclick="filtrarCategoria('Ultra')" class="flex flex-col items-center p-3 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-emerald-500 transition">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-snowflake"></i></div>
+                            <span class="text-[11px] font-semibold text-slate-700">Ultra 0%</span>
+                        </button>
+                        <button onclick="filtrarCategoria('Juice')" class="flex flex-col items-center p-3 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-emerald-500 transition">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-wine-glass"></i></div>
+                            <span class="text-[11px] font-semibold text-slate-700">Juice</span>
+                        </button>
+                    </div>
+                `;
+                main.appendChild(catSec);
+
+                const prodHeader = document.createElement('div');
+                prodHeader.className = "flex justify-between items-center mt-2";
+                prodHeader.innerHTML = `<h3 class="text-sm font-bold text-slate-900">Mais Vendidos</h3><button onclick="mudarAba('catalogo')" class="text-xs font-semibold text-emerald-600 hover:underline">Ver todos</button>`;
+                main.appendChild(prodHeader);
+
+                const grid = document.createElement('div');
+                grid.className = "grid grid-cols-2 gap-3";
+                catalogo.forEach(prod => {
+                    grid.appendChild(criarCardProduto(prod));
+                });
+                main.appendChild(grid);
+
+            } else if (abaAtual === 'catalogo') {
+                const headerCat = document.createElement('div');
+                headerCat.innerHTML = `
+                    <h2 class="text-base font-bold text-slate-900">Catálogo Completo Monster</h2>
+                    <p class="text-xs text-slate-500">Escolha seu sabor favorito e recarregue as energias.</p>
+                `;
+                main.appendChild(headerCat);
+
+                const filtrosDiv = document.createElement('div');
+                filtrosDiv.className = "flex space-x-2 overflow-x-auto pb-1";
+                ['todos', 'Original', 'Ultra', 'Juice'].forEach(cat => {
+                    const ativo = categoriaAtiva === cat;
+                    filtrosDiv.innerHTML += `
+                        <button onclick="filtrarCategoria('${cat}')" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${ativo ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20' : 'bg-white text-slate-600 border border-slate-200'}">
+                            ${cat.toUpperCase()}
+                        </button>
+                    `;
+                });
+                main.appendChild(filtrosDiv);
+
+                const grid = document.createElement('div');
+                grid.className = "grid grid-cols-2 gap-3";
+                const filtrados = categoriaAtiva === 'todos' ? catalogo : catalogo.filter(p => p.categoria === categoriaAtiva);
+                filtrados.forEach(prod => {
+                    grid.appendChild(criarCardProduto(prod));
+                });
+                main.appendChild(grid);
+
+            } else if (abaAtual === 'carrinho') {
+                const itens = Object.values(carrinho);
+                
+                const topCarrinho = document.createElement('div');
+                topCarrinho.className = "flex items-center justify-between";
+                topCarrinho.innerHTML = `
+                    <button onclick="mudarAba('home')" class="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-700 shadow-sm"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+                    <h2 class="text-base font-bold text-slate-900">Carrinho de Compras</h2>
+                    <div class="w-9"></div>
+                `;
+                main.appendChild(topCarrinho);
+
+                if (itens.length === 0) {
+                    main.innerHTML += `
+                        <div class="text-center py-20 space-y-3">
+                            <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-base">Seu carrinho está vazio</h3>
+                            <p class="text-xs text-slate-400">Adicione seus sabores favoritos para começar.</p>
+                            <button onclick="mudarAba('catalogo')" class="mt-3 px-6 py-3 bg-emerald-600 text-white font-bold rounded-2xl text-xs hover:bg-emerald-700 transition shadow">Explorar Produtos</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const orderSummaryTitle = document.createElement('h3');
+                orderSummaryTitle.className = "text-xs font-bold text-slate-500 uppercase tracking-wider";
+                orderSummaryTitle.innerText = "Resumo do Pedido";
+                main.appendChild(orderSummaryTitle);
+
+                const listaItens = document.createElement('div');
+                listaItens.className = "space-y-3";
+                itens.forEach(item => {
+                    listaItens.innerHTML += `
+                        <div class="flex items-center justify-between p-3.5 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-14 h-14 bg-white rounded-xl p-1 flex items-center justify-center border border-slate-100 overflow-hidden shrink-0">
+                                    <img src="${item.produto.img}" class="w-full h-full object-contain">
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">${item.quantidade}x ${item.produto.nome}</h4>
+                                    <span class="text-xs font-semibold text-emerald-600">R$ ${(item.produto.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl">
+                                <button onclick="alterarQtd(${item.produto.id}, -1)" class="w-6 h-6 rounded-lg bg-white text-slate-700 flex items-center justify-center shadow-xs font-bold text-xs"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                <span class="w-5 text-center text-xs font-bold">${item.quantidade}</span>
+                                <button onclick="alterarQtd(${item.produto.id}, 1)" class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center shadow-xs font-bold text-xs"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                main.appendChild(listaItens);
+
+                const addMoreBtn = document.createElement('button');
+                addMoreBtn.onclick = () => mudarAba('catalogo');
+                addMoreBtn.className = "w-full py-3 bg-white border border-emerald-600 text-emerald-600 font-bold rounded-2xl text-xs hover:bg-emerald-50 transition shadow-sm flex items-center justify-center space-x-2";
+                addMoreBtn.innerHTML = `<i class="fa-solid fa-plus text-xs"></i><span>Adicionar Mais Itens</span>`;
+                main.appendChild(addMoreBtn);
+
+                const couponSec = document.createElement('div');
+                couponSec.className = "bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-2";
+                couponSec.innerHTML = `
+                    <label class="text-xs font-bold text-slate-700 block">Cupom de Desconto</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="promo-input" placeholder="Cupom (Ex: MONSTER10)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-500 font-medium">
+                        <button onclick="aplicarCupom()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow">Aplicar</button>
+                    </div>
+                    <div id="promo-msg"></div>
+                `;
+                main.appendChild(couponSec);
+
+                const { subtotal, descontoVal, frete, total } = calcularTotais();
+                const totalsSec = document.createElement('div');
+                totalsSec.className = "bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-2.5";
+                totalsSec.innerHTML = `
+                    <div class="flex justify-between text-xs text-slate-500">
+                        <span>Subtotal</span>
+                        <span class="font-semibold text-slate-800">R$ ${subtotal.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    ${descontoVal > 0 ? `
+                    <div class="flex justify-between text-xs text-emerald-600">
+                        <span>Desconto Cupom</span>
+                        <span class="font-semibold">- R$ ${descontoVal.toFixed(2).replace('.', ',')}</span>
+                    </div>` : ''}
+                    <div class="flex justify-between text-xs text-slate-500">
+                        <span>Frete & Taxas</span>
+                        <span class="font-semibold text-emerald-600">R$ ${frete.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <div class="border-t border-dashed border-slate-200 pt-2 flex justify-between text-sm font-bold text-slate-900">
+                        <span>Total</span>
+                        <span class="text-emerald-600">R$ ${total.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <button onclick="abrirCheckout()" class="w-full mt-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-emerald-600/30 transition text-sm flex items-center justify-center space-x-2">
+                        <span>Ir para o Checkout</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                `;
+                main.appendChild(totalsSec);
+
+            } else if (abaAtual === 'perfil') {
+                main.innerHTML = `
+                    <div class="text-center py-10 space-y-4">
+                        <div class="w-24 h-24 rounded-full overflow-hidden mx-auto shadow-lg border-2 border-emerald-600">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">Ghazaleh</h2>
+                            <p class="text-xs text-slate-500">ghazaleh@monsterenergy.com</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-left space-y-3">
+                            <div class="flex justify-between items-center text-xs font-semibold text-slate-700 border-b border-slate-100 pb-2.5">
+                                <span><i class="fa-solid fa-bolt text-emerald-600 mr-2"></i> Status VIP Monster</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[10px]">Nível 3</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs font-semibold text-slate-700 border-b border-slate-100 pb-2.5">
+                                <span><i class="fa-solid fa-location-dot text-emerald-600 mr-2"></i> Endereço de Entrega</span>
+                                <span class="text-slate-400">São Paulo, SP</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs font-semibold text-slate-700">
+                                <span><i class="fa-solid fa-gift text-emerald-600 mr-2"></i> Cupons Disponíveis</span>
+                                <span class="text-emerald-600">1 Cupom</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function criarCardProduto(prod) {
+            const qtd = carrinho[prod.id] ? carrinho[prod.id].quantidade : 0;
+            const card = document.createElement('div');
+            card.className = "bg-white p-3.5 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition relative group";
+            card.innerHTML = `
+                <div class="w-full h-32 bg-white rounded-2xl p-2 flex items-center justify-center relative overflow-hidden">
+                    <img src="${prod.img}" alt="${prod.nome}" class="h-full object-contain group-hover:scale-105 transition duration-300 drop-shadow-md">
+                </div>
+                <div class="mt-2.5">
+                    <h4 class="font-bold text-slate-900 text-xs truncate">${prod.nome}</h4>
+                    <p class="text-[10px] text-slate-400 truncate">${prod.sabor}</p>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="text-xs font-bold text-emerald-600">R$ ${prod.preco.toFixed(2).replace('.', ',')}</span>
+                        <div class="flex items-center space-x-1">
+                            ${qtd > 0 ? `
+                                <button onclick="alterarQtd(${prod.id}, -1)" class="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-minus text-[9px]"></i></button>
+                                <span class="w-4 text-center text-xs font-bold">${qtd}</span>
+                            ` : ''}
+                            <button onclick="alterarQtd(${prod.id}, 1)" class="w-7 h-7 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-md shadow-emerald-600/30 transition">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function filtrarCategoria(cat) {
+            categoriaAtiva = cat;
+            if (abaAtual !== 'catalogo' && cat !== 'todos') {
+                mudarAba('catalogo');
+            } else {
+                renderizar();
+            }
+        }
+
+        function abrirCheckout() {
+            const { total } = calcularTotais();
+            const main = document.getElementById('main-container');
+            
+            main.innerHTML = `
+                <div class="space-y-4 animate-fadeIn">
+                    <div class="flex items-center justify-between">
+                        <button onclick="mudarAba('carrinho')" class="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-700 shadow-sm"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+                        <h2 class="text-base font-bold text-slate-900">Checkout</h2>
+                        <div class="w-9"></div>
+                    </div>
+
+                    <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl text-emerald-800 text-xs flex items-center space-x-3">
+                        <i class="fa-solid fa-shield-halved text-lg text-emerald-600"></i>
+                        <div>
+                            <span class="font-bold block">Checkout 100% Seguro</span>
+                            <span>Escolha sua forma de pagamento abaixo.</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <label class="flex items-center p-3.5 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:border-emerald-500 transition shadow-xs">
+                            <input type="radio" name="pg" value="pix" checked class="text-emerald-600 focus:ring-emerald-500">
+                            <div class="ml-3 flex items-center justify-between flex-1">
+                                <span class="font-bold text-xs text-slate-800">Pix (⚡ 5% de Desconto)</span>
+                                <i class="fa-brands fa-pix text-emerald-600 text-base"></i>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-3.5 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:border-emerald-500 transition shadow-xs">
+                            <input type="radio" name="pg" value="cartao" class="text-emerald-600 focus:ring-emerald-500">
+                            <div class="ml-3 flex items-center justify-between flex-1">
+                                <span class="font-bold text-xs text-slate-800">Cartão de Crédito</span>
+                                <i class="fa-solid fa-credit-card text-blue-600 text-base"></i>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-2">
+                        <div class="flex justify-between text-xs text-slate-500">
+                            <span>Total do Pedido</span>
+                            <span class="font-bold text-slate-800">R$ ${total.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <div class="border-t border-slate-100 pt-2 flex justify-between text-sm font-bold text-slate-900">
+                            <span>Valor Final</span>
+                            <span class="text-emerald-600">R$ ${total.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                    </div>
+
+                    <button onclick="finalizarSucesso()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-emerald-600/35 transition text-sm flex items-center justify-center space-x-2 mt-4">
+                        <span>Confirmar Pagamento</span>
+                        <i class="fa-solid fa-bolt"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function finalizarSucesso() {
+            carrinho = {};
+            cupomDesconto = 0;
+            atualizarBadge();
+            const main = document.getElementById('main-container');
+            main.innerHTML = `
+                <div class="text-center py-20 space-y-4 animate-fadeIn">
+                    <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-bounce">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-slate-900">Fera Liberada! ⚡</h3>
+                    <p class="text-xs text-slate-500 px-4">Seu pedido foi confirmado e já está sendo separado para entrega expressa.</p>
+                    <button onclick="mudarAba('home')" class="mt-4 px-8 py-3.5 bg-slate-900 text-white font-bold rounded-2xl text-xs hover:bg-slate-800 transition shadow-lg">Voltar à Home</button>
+                </div>
+            `;
+        }
+
+        renderizar();
+    </script>
+</body>
+</html>
